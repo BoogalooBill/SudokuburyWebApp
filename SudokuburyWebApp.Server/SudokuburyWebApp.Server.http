@@ -1,0 +1,110 @@
+@SudokuburyWebApp.Server_HostAddress = https://localhost:7203
+
+
+###
+
+POST {{SudokuburyWebApp.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "Email": "scantleburyR@protonmail.com",
+  "Password": "Bootyjuice1",
+  "ConfirmPassword": "Bootyjuice1"
+}
+
+###
+
+GET {{SudokuburyWebApp.Server_HostAddress}}/api/auth/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NTc5NTA0ZC02YTdiLTQ1MDQtOWI4Zi0yMzUzMDhiOTgzYzAiLCJlbWFpbCI6InNjYW50bGVidXJ5UkBwcm90b25tYWlsLmNvbSIsImp0aSI6IjAwM2JjYTg5LWNiYmEtNDk1OS1iODVlLTg0Y2ViMDBiMmFkZCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNzU3OTUwNGQtNmE3Yi00NTA0LTliOGYtMjM1MzA4Yjk4M2MwIiwiZXhwIjoxNzQ4OTA2NjQ1LCJpc3MiOiJTdWRva3VidXJ5V2ViQXBwIiwiYXVkIjoiU3Vkb2t1R2FtZVVzZXJzIn0.CYH9ZgtrO5RBK-CqOQKrSv54LN3j0dpch1Jghf2Knfs
+
+###
+
+POST {{SudokuburyWebApp.Server_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "Email": "scantleburyR@protonmail.com",
+  "Password": "Bootyjuice1"
+
+}
+
+###
+
+POST {{SudokuburyWebApp.Server_HostAddress}}/api/sudoku/generate
+Content-Type: application/json
+
+{
+  "Difficulty": "hard"
+}
+
+###
+
+GET {{SudokuburyWebApp.Server_HostAddress}}/api/savedgames
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNDg4M2E5OC1iMDlmLTQ4ZGMtODJhOC1jNGQ3ZTE0YjRhODciLCJlbWFpbCI6InNjYW50bGVidXJ5UkBwcm90b25tYWlsLmNvbSIsImp0aSI6ImMyODM2MTZkLTE4YWUtNDU3ZS04NzU0LWRlM2VjOGI3NjM3OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMjQ4ODNhOTgtYjA5Zi00OGRjLTgyYTgtYzRkN2UxNGI0YTg3IiwiZXhwIjoxNzUwMjA2MjI3LCJpc3MiOiJTdWRva3VidXJ5V2ViQXBwIiwiYXVkIjoiU3Vkb2t1R2FtZVVzZXJzIn0.DHoLxnrEorxGvDwskj8WgFc3QEzG8qIPa5vb5qIlDZo
+
+###
+
+POST {{SudokuburyWebApp.Server_HostAddress}}/api/savedgames
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNDg4M2E5OC1iMDlmLTQ4ZGMtODJhOC1jNGQ3ZTE0YjRhODciLCJlbWFpbCI6InNjYW50bGVidXJ5UkBwcm90b25tYWlsLmNvbSIsImp0aSI6ImMyODM2MTZkLTE4YWUtNDU3ZS04NzU0LWRlM2VjOGI3NjM3OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMjQ4ODNhOTgtYjA5Zi00OGRjLTgyYTgtYzRkN2UxNGI0YTg3IiwiZXhwIjoxNzUwMjA2MjI3LCJpc3MiOiJTdWRva3VidXJ5V2ViQXBwIiwiYXVkIjoiU3Vkb2t1R2FtZVVzZXJzIn0.DHoLxnrEorxGvDwskj8WgFc3QEzG8qIPa5vb5qIlDZo
+
+
+{
+    "gameName": "New Expert Game",
+    "initialPuzzle": "067020000002008000080006037000003800030060001800000045510300709000050000000000003",
+    "currentState": "067020000002008000080006037000003800030060001800000045510300709000050000000000003",
+    "completedSolution": "367124598952738614481596237195473826234865971876219345518342769643957182729681453",
+    "difficulty": 4,
+    "gameStatus": 1,
+    "elapsedTime": "00:02:39",
+    "hintsUsed": 0,
+    "notes": ""
+}
+
+###
+
+@id=4
+DELETE {{SudokuburyWebApp.Server_HostAddress}}/api/savedgames/id?id={{id}}
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNDg4M2E5OC1iMDlmLTQ4ZGMtODJhOC1jNGQ3ZTE0YjRhODciLCJlbWFpbCI6InNjYW50bGVidXJ5UkBwcm90b25tYWlsLmNvbSIsImp0aSI6ImMyODM2MTZkLTE4YWUtNDU3ZS04NzU0LWRlM2VjOGI3NjM3OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMjQ4ODNhOTgtYjA5Zi00OGRjLTgyYTgtYzRkN2UxNGI0YTg3IiwiZXhwIjoxNzUwMjA2MjI3LCJpc3MiOiJTdWRva3VidXJ5V2ViQXBwIiwiYXVkIjoiU3Vkb2t1R2FtZVVzZXJzIn0.DHoLxnrEorxGvDwskj8WgFc3QEzG8qIPa5vb5qIlDZo
+
+###
+
+@id=4
+PUT {{SudokuburyWebApp.Server_HostAddress}}/api/savedgames/{{id}}
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNDg4M2E5OC1iMDlmLTQ4ZGMtODJhOC1jNGQ3ZTE0YjRhODciLCJlbWFpbCI6InNjYW50bGVidXJ5UkBwcm90b25tYWlsLmNvbSIsImp0aSI6ImMyODM2MTZkLTE4YWUtNDU3ZS04NzU0LWRlM2VjOGI3NjM3OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMjQ4ODNhOTgtYjA5Zi00OGRjLTgyYTgtYzRkN2UxNGI0YTg3IiwiZXhwIjoxNzUwMjA2MjI3LCJpc3MiOiJTdWRva3VidXJ5V2ViQXBwIiwiYXVkIjoiU3Vkb2t1R2FtZVVzZXJzIn0.DHoLxnrEorxGvDwskj8WgFc3QEzG8qIPa5vb5qIlDZo
+
+{
+  "currentState": "534671892627195843198342567859764123471823651743529786365987214982416375216358479",
+  "notes": "{\"0,8\":[\"2\"],\"1,6\":[\"7\"],\"2,3\":[\"3\",\"4\"]}",
+  "elapsedTime": "00:15:30",
+  "hintsUsed": 6
+}
+
+###
+
+POST {{SudokuburyWebApp.Server_HostAddress}}/api/sudoku/generate
+Content-Type: application/json
+
+{
+  //SudokuRequest
+}
+
+###
+
+POST {{SudokuburyWebApp.Server_HostAddress}}/api/savedgames
+Content-Type: application/json
+
+{
+  //CreateSavedGameDto
+}
+
+###
+@id=1
+GET {{SudokuburyWebApp.Server_HostAddress}}/api/savedgames/{{id}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNDg4M2E5OC1iMDlmLTQ4ZGMtODJhOC1jNGQ3ZTE0YjRhODciLCJlbWFpbCI6InNjYW50bGVidXJ5UkBwcm90b25tYWlsLmNvbSIsImp0aSI6ImMyODM2MTZkLTE4YWUtNDU3ZS04NzU0LWRlM2VjOGI3NjM3OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMjQ4ODNhOTgtYjA5Zi00OGRjLTgyYTgtYzRkN2UxNGI0YTg3IiwiZXhwIjoxNzUwMjA2MjI3LCJpc3MiOiJTdWRva3VidXJ5V2ViQXBwIiwiYXVkIjoiU3Vkb2t1R2FtZVVzZXJzIn0.DHoLxnrEorxGvDwskj8WgFc3QEzG8qIPa5vb5qIlDZo
+
+###

@@ -1,0 +1,204 @@
+/* Auth Pages Container - Login and Register */
+.auth-container {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    z-index: 999; /* Below navbar but above other content */
+}
+
+/* Auth Form Card */
+.auth-card {
+    background: #1e1e2e;
+    border: 1px solid #313244;
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0;
+    position: relative;
+    z-index: 1000;
+}
+
+/* Auth Form Header */
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #f8f8f2;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    color: #a6adc8;
+    font-size: 0.875rem;
+}
+
+/* Form Styles */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #f8f8f2;
+    font-size: 0.875rem;
+}
+
+.form-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #45475a;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.15s ease-in-out;
+    background-color: #313244;
+    color: #f8f8f2;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+    .form-input:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .form-input::placeholder {
+        color: #6c7086;
+    }
+
+/* Submit Button */
+.submit-button {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    width: 100%;
+}
+
+    .submit-button:hover {
+        background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.4);
+    }
+
+    .submit-button:active {
+        transform: translateY(0);
+    }
+
+    .submit-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        background: linear-gradient(135deg, #6c7086 0%, #585b70 100%);
+    }
+
+/* Auth Footer */
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #45475a;
+}
+
+.auth-footer-text {
+    color: #a6adc8;
+    font-size: 0.875rem;
+}
+
+/* Auth link button styling - looks like a link but is a button */
+.auth-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    color: #8b5cf6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease-in-out;
+}
+
+    .auth-link:hover {
+        color: #a855f7;
+        text-decoration: underline;
+    }
+
+/* Error Messages */
+.error-message {
+    background-color: #2d1b1b;
+    border: 1px solid #632626;
+    color: #f87171;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+/* Success Messages */
+.success-message {
+    background-color: #1a2b1a;
+    border: 1px solid #2d5a2d;
+    color: #4ade80;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+/* Loading State */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 1rem 0.5rem;
+    }
+
+    .auth-card {
+        padding: 2rem 1.5rem;
+        margin: 0;
+        border-radius: 0.5rem;
+    }
+
+    .auth-title {
+        font-size: 1.5rem;
+    }
+
+    .form-input {
+        padding: 0.675rem 0.875rem;
+    }
+
+    .submit-button {
+        padding: 0.675rem 1.25rem;
+    }
+}

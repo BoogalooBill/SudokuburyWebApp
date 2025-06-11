@@ -1,0 +1,570 @@
+/* GameOptions.css - Game options panel styling */
+
+.game-options {
+    background-color: #252540; /* Slightly lighter than game-space background */
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.options-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #3a3a5c;
+    padding-bottom: 12px;
+}
+
+    .options-header h3 {
+        color: #f8f8f2;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.option-button {
+    background-color: #3a3a5c;
+    color: #f8f8f2;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+    .option-button:hover {
+        background-color: #4a4a6c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .option-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Button variants */
+    .option-button.primary {
+        background-color: #8b5cf6;
+        color: white;
+        font-weight: 600;
+    }
+
+        .option-button.primary:hover {
+            background-color: #7c3aed;
+        }
+
+    .option-button.danger {
+        background-color: #ef4444;
+        color: white;
+    }
+
+        .option-button.danger:hover {
+            background-color: #dc2626;
+        }
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: #1e1e2e;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    min-width: 400px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid #3a3a5c;
+}
+
+    .modal-header h4 {
+        color: #f8f8f2;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+.close-button {
+    background: none;
+    border: none;
+    color: #a6adc8;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+    .close-button:hover {
+        background-color: #3a3a5c;
+        color: #f8f8f2;
+    }
+
+/* Difficulty selection styles */
+.difficulty-options {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.difficulty-button {
+    background-color: #2a2a3e;
+    border: 2px solid #3a3a5c;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    color: #f8f8f2;
+}
+
+    .difficulty-button:hover {
+        border-color: #8b5cf6;
+        background-color: #3a3a5c;
+        transform: translateX(4px);
+    }
+
+.difficulty-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.difficulty-description {
+    font-size: 13px;
+    color: #a6adc8;
+}
+
+/* Difficulty-specific colors */
+.difficulty-button.easy:hover {
+    border-color: #10b981;
+}
+
+.difficulty-button.medium:hover {
+    border-color: #f59e0b;
+}
+
+.difficulty-button.hard:hover {
+    border-color: #ef4444;
+}
+
+.difficulty-button.expert:hover {
+    border-color: #8b5cf6;
+}
+
+/* Modal body styles */
+.modal-body {
+    padding: 20px;
+}
+
+    .modal-body p {
+        color: #a6adc8;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+.import-textarea {
+    width: 100%;
+    background-color: #2a2a3e;
+    border: 2px solid #3a3a5c;
+    border-radius: 8px;
+    padding: 12px;
+    color: #f8f8f2;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.4;
+    word-break: break-all;
+}
+
+    .import-textarea:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+.character-counter {
+    color: #a6adc8;
+    font-size: 12px;
+    margin-top: 8px;
+    text-align: right;
+}
+
+.export-text {
+    background-color: #2a2a3e;
+    border: 2px solid #3a3a5c;
+    border-radius: 8px;
+    padding: 12px;
+    color: #f8f8f2;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    word-break: break-all;
+    line-height: 1.4;
+    margin-bottom: 16px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.cancel-button,
+.import-button,
+.close-button-modal {
+    background-color: #3a3a5c;
+    color: #f8f8f2;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .cancel-button:hover,
+    .close-button-modal:hover {
+        background-color: #4a4a6c;
+    }
+
+.import-button {
+    background-color: #8b5cf6;
+}
+
+    .import-button:hover:not(:disabled) {
+        background-color: #7c3aed;
+    }
+
+    .import-button:disabled {
+        background-color: #4a4a6c;
+        color: #6b7280;
+        cursor: not-allowed;
+    }
+
+/* Save Game Form Styles - extends existing modal styles */
+.save-form {
+    /* Uses existing modal-body padding */
+}
+
+.save-form-group {
+    margin-bottom: 16px;
+}
+
+    .save-form-group label {
+        display: block;
+        color: #f8f8f2;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+
+.save-input {
+    width: 100%;
+    background-color: #2a2a3e;
+    border: 2px solid #3a3a5c;
+    border-radius: 8px;
+    padding: 12px;
+    color: #f8f8f2;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+    .save-input:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .save-input::placeholder {
+        color: #6b7280;
+    }
+
+/* Error message styling */
+.error-message {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fca5a5;
+}
+
+.error-icon {
+    font-size: 16px;
+}
+
+/* Loading styles */
+.loading-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #3a3a5c;
+    border-top: 3px solid #8b5cf6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 12px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-container p {
+    color: #a6adc8;
+    margin: 0;
+}
+
+/* Saved Games List Styles */
+.saved-games-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.saved-game-item {
+    background-color: #2a2a3e;
+    border: 2px solid #3a3a5c;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .saved-game-item:hover {
+        border-color: #8b5cf6;
+        background-color: #3a3a5c;
+    }
+
+    .saved-game-item.selected {
+        border-color: #8b5cf6;
+        background-color: rgba(139, 92, 246, 0.1);
+    }
+
+.game-info {
+    flex: 1;
+}
+
+.game-name {
+    color: #f8f8f2;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.game-details {
+    color: #a6adc8;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.difficulty {
+    font-weight: 500;
+}
+
+.separator {
+    margin: 0 6px;
+}
+
+.game-notes {
+    color: #9ca3af;
+    font-size: 11px;
+    font-style: italic;
+    margin-top: 4px;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.game-status {
+    font-size: 16px;
+    margin-left: 12px;
+}
+
+/* Check Solution Button Highlight - when board is complete */
+.option-button.check-complete {
+    background-color: #10b981 !important;
+    color: white !important;
+    font-weight: 600;
+    animation: pulseGreen 2s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+    .option-button.check-complete:hover {
+        background-color: #059669 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+@keyframes pulseGreen {
+    0% {
+        background-color: #10b981;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+
+    50% {
+        background-color: #34d399;
+        box-shadow: 0 0 30px rgba(52, 211, 153, 0.5);
+    }
+
+    100% {
+        background-color: #10b981;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+}
+
+/* Additional pulsing glow effect */
+.option-button.check-complete::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #10b981, #34d399, #10b981);
+    border-radius: 10px;
+    z-index: -1;
+    animation: glowPulse 2s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* Ensure the button has relative positioning for the pseudo-element */
+.option-button {
+    position: relative;
+    background-color: #3a3a5c;
+    color: #f8f8f2;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden; /* Prevent glow from extending outside button bounds */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .game-options {
+        min-width: 250px;
+        max-width: 300px;
+        padding: 16px;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .option-button {
+        padding: 14px 16px;
+        min-height: 44px;
+        font-size: 13px;
+    }
+
+    .modal-content {
+        min-width: 300px;
+        margin: 20px;
+    }
+
+    .modal-header,
+    .modal-body,
+    .difficulty-options {
+        padding: 16px;
+    }
+
+    .difficulty-button {
+        padding: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        min-width: 280px;
+        margin: 10px;
+    }
+
+    .import-textarea {
+        font-size: 11px;
+        min-height: 60px;
+    }
+
+    .export-text {
+        font-size: 11px;
+    }
+}

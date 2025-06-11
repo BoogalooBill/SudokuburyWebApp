@@ -1,0 +1,221 @@
+/* Global Dark Mode Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    background-attachment: fixed;
+    color: #f8f8f2;
+    min-height: 100vh;
+}
+
+/* Root App Container */
+#root {
+    width: 100%;
+    min-height: 100vh;
+    background: inherit;
+}
+
+/* App Component - FIXED: Changed from 100vw to 100% */
+.App {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    background: inherit;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: #f8f8f2;
+    font-weight: 600;
+}
+
+p {
+    color: #a6adc8;
+    line-height: 1.6;
+}
+
+a {
+    color: #8b5cf6;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+}
+
+    a:hover {
+        color: #a855f7;
+    }
+
+/* Code styling for better readability */
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    background-color: #313244;
+    color: #f8f8f2;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+/* Main content area - account for fixed navbar */
+main {
+    padding-top: 4rem;
+    width: 100%;
+    min-height: calc(100vh - 4rem);
+    background: inherit;
+    display: grid;
+    place-items: center;
+}
+
+/* Container for centered content */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Card-like containers for content */
+.content-card {
+    background: #1e1e2e;
+    border: 1px solid #313244;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    margin: 1rem 0;
+}
+
+/* Button styles for consistency */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+.btn-secondary {
+    background: #313244;
+    color: #f8f8f2;
+    border: 1px solid #45475a;
+}
+
+    .btn-secondary:hover {
+        background: #45475a;
+        border-color: #585b70;
+    }
+
+/* Input styles for forms */
+.form-control {
+    padding: 0.75rem 1rem;
+    border: 2px solid #45475a;
+    border-radius: 0.5rem;
+    background-color: #313244;
+    color: #f8f8f2;
+    font-size: 1rem;
+    transition: all 0.15s ease-in-out;
+    width: 100%;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .form-control::placeholder {
+        color: #6c7086;
+    }
+
+/* Text selection styling */
+::selection {
+    background-color: #8b5cf6;
+    color: #ffffff;
+}
+
+::-moz-selection {
+    background-color: #8b5cf6;
+    color: #ffffff;
+}
+
+/* Scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e2e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #45475a;
+    border-radius: 4px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #585b70;
+    }
+
+/* Loading animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 0.5rem;
+    }
+
+    .content-card {
+        padding: 1.5rem;
+        margin: 0.5rem 0;
+        border-radius: 0.75rem;
+    }
+
+    main {
+        padding-top: 4rem;
+    }
+}

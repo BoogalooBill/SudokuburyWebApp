@@ -1,0 +1,229 @@
+/* SudokuBoard.css - Sudoku grid styling */
+
+.sudoku-board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #252540; /* Slightly lighter than game-space (#1e1e2e) */
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sudoku-board {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 1px;
+    background-color: #3a3a5c; /* Border color between cells */
+    border: 3px solid #3a3a5c;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 540px;
+    height: 540px;
+    user-select: none;
+}
+
+.sudoku-cell {
+    background-color: #f8f8f2; /* Light background for cells */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+    width: 59px;
+    height: 59px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #2e2e2e;
+}
+
+    /* Cell states */
+    .sudoku-cell.selected {
+        background-color: #8b5cf6 !important;
+        color: white;
+        box-shadow: inset 0 0 0 2px #7c3aed;
+    }
+
+    .sudoku-cell.highlighted {
+        background-color: #e0e7ff;
+    }
+
+    .sudoku-cell.fixed {
+        background-color: #e5e7eb;
+        color: #1f2937;
+        font-weight: 700;
+    }
+
+    .sudoku-cell.error {
+        background-color: #fecaca !important;
+        color: #dc2626;
+    }
+
+    /* Hover effects */
+    .sudoku-cell:hover:not(.selected) {
+        background-color: #f3f4f6;
+        transform: scale(1.02);
+    }
+
+    .sudoku-cell.fixed:hover {
+        background-color: #e5e7eb;
+        transform: none;
+    }
+
+    /* 3x3 box borders - thick borders between boxes */
+    .sudoku-cell.border-top {
+        border-top: 3px solid #3a3a5c;
+    }
+
+    .sudoku-cell.border-bottom {
+        border-bottom: 3px solid #3a3a5c;
+    }
+
+    .sudoku-cell.border-left {
+        border-left: 3px solid #3a3a5c;
+    }
+
+    .sudoku-cell.border-right {
+        border-right: 3px solid #3a3a5c;
+    }
+
+/* Cell content */
+.cell-value {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.cell-notes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1px;
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+}
+
+.note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+    .note.active {
+        color: #374151;
+        font-weight: 600;
+    }
+
+/* Instructions */
+.board-instructions {
+    text-align: center;
+    color: #a6adc8;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 500px;
+}
+
+    .board-instructions p {
+        margin: 0.5rem 0;
+    }
+
+.notes-mode-indicator {
+    color: #f59e0b !important;
+    font-weight: 600;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .sudoku-board-container {
+        padding: 15px;
+    }
+
+    .sudoku-board {
+        width: 450px;
+        height: 450px;
+    }
+
+    .sudoku-cell {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .cell-value {
+        font-size: 20px;
+    }
+
+    .note {
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sudoku-board-container {
+        padding: 10px;
+    }
+
+    .sudoku-board {
+        width: 360px;
+        height: 360px;
+    }
+
+    .sudoku-cell {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .cell-value {
+        font-size: 18px;
+    }
+
+    .note {
+        font-size: 7px;
+    }
+
+    .board-instructions {
+        font-size: 12px;
+    }
+}
+
+/* Focus accessibility */
+.sudoku-cell:focus {
+    outline: 2px solid #8b5cf6;
+    outline-offset: -2px;
+}
+
+/* Animation for cell changes */
+.sudoku-cell .cell-value {
+    animation: cellPop 0.2s ease-out;
+}
+
+@keyframes cellPop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Dark theme adjustments for better contrast */
+.sudoku-cell.selected .cell-value,
+.sudoku-cell.selected .note {
+    color: white;
+}
+
+.sudoku-cell.highlighted.fixed {
+    background-color: #d1d5db;
+}

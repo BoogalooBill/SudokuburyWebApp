@@ -1,0 +1,80 @@
+/* GameSpace.css - Main game container styling */
+
+.game-space-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    /* No background color - using default page background */
+}
+
+.game-space {
+    background-color: #1e1e2e; /* Updated dark background color */
+    border-radius: 16px; /* Rounded corners */
+    padding: 32px;
+    min-width: 1000px; /* Increased to accommodate both components side by side */
+    min-height: 600px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    /* Center content within the container */
+    display: flex;
+    flex-direction: row; /* Changed to row for side-by-side layout */
+    align-items: flex-start; /* Align to top */
+    justify-content: center; /* Center horizontally */
+    gap: 32px; /* Increased gap for side-by-side layout */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: stretch; /* Make components same width */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1200px) {
+    .game-space {
+        min-width: 100%;
+        flex-direction: column; /* Stack vertically on smaller screens */
+        align-items: center; /* Center when stacked */
+    }
+
+    .right-panel {
+        flex-direction: row; /* Side by side on tablet */
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-space-container {
+        padding: 10px;
+    }
+
+    .game-space {
+        min-height: auto; /* Changed from fixed height */
+        padding: 20px;
+        border-radius: 12px;
+        gap: 20px;
+    }
+
+    .right-panel {
+        flex-direction: column; /* Stack vertically on mobile */
+        gap: 16px;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-space {
+        padding: 16px;
+        border-radius: 8px;
+        gap: 16px;
+    }
+
+    .right-panel {
+        gap: 12px;
+    }
+}
