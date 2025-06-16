@@ -49,7 +49,8 @@ namespace SudokuburyWebApp.Server.Models
         Easy = 1,
         Medium = 2,
         Hard = 3,
-        Expert = 4
+        Expert = 4,
+        Imported = 5
     }
 
     public enum GameStatus

@@ -39,6 +39,17 @@ namespace SudokuburyWebApp.Server.Services
             };
         }
 
+        public SudokuPuzzle ImportPuzzle(string import, int[,] solution)
+        {
+            return new SudokuPuzzle
+            {
+                Puzzle = import,
+                Solution = ConvertGridToString(solution),
+                Difficulty = "Imported"
+            };
+
+        }
+
         private bool ValidChoice(int[,] board, int row, int col, int val)
         {
             for (int i = 0; i < 9; i++)
@@ -103,7 +114,7 @@ namespace SudokuburyWebApp.Server.Services
             return solutionsFound;
         }
 
-        private int[,]? SolveBoard(int[,] board)
+        public int[,]? SolveBoard(int[,] board)
         {
             int[,] solution = (int[,])board.Clone();
 
@@ -111,6 +122,27 @@ namespace SudokuburyWebApp.Server.Services
                 return solution;
             else
                 return null;
+        }
+
+        public int[,]? ConvertStringToBoard(string board)
+        {
+            int[,] converted = new int[9, 9];
+            int row = 0;
+            int col = 0;
+            for(int i = 0; i < board.Length; i++)
+            {
+                converted[row, col] = board[i] - '0';
+                col++;
+
+                if (col >= 9)
+                {
+                    row++;
+                    col = 0;
+                }
+            }
+
+            Console.WriteLine(converted);
+            return converted;
         }
 
         private bool SolveHelper(int[,] board, int row = 0, int col = 0)

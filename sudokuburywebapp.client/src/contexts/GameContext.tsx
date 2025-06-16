@@ -48,7 +48,8 @@ export enum DifficultyLevel {
     Easy = 1,
     Medium = 2,
     Hard = 3,
-    Expert = 4
+    Expert = 4,
+    Imported = 5
 }
 
 export enum GameStatus {
@@ -969,7 +970,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }, [gameState.elapsedTime]);
 
-    const loadBoardFromString = useCallback((boardString: string) => {
+    const loadBoardFromString = useCallback(async (boardString: string) => {
         const newBoard = stringToBoard(boardString);
         setGameState(prev => ({
             ...prev,
@@ -977,6 +978,75 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
             currentState: boardString,
             lastPlayedAt: new Date()
         }));
+
+        try {
+            let response;
+
+            //Make API call to backend to get the solution for this board and set it as a new game
+            response = await apiClient.post("/api/sudoku/import", { puzzle: boardString })
+
+            // Validate response data
+            const data = response.data;
+            if (!data.puzzle || !data.solution) {
+                throw new Error('Invalid response: missing puzzle data');
+            }
+
+            if (data.puzzle.length !== 81 || data.solution.length !== 81) {
+                throw new Error('Invalid response: puzzle data must be 81 characters');
+            }
+
+            if (!/^[0-9]+$/.test(data.puzzle) || !/^[1-9]+$/.test(data.solution)) {
+                throw new Error('Invalid response: puzzle data contains invalid characters');
+            }
+
+            const now = new Date();
+            const difficultyNames = {
+                [DifficultyLevel.Easy]: 'Easy',
+                [DifficultyLevel.Medium]: 'Medium',
+                [DifficultyLevel.Hard]: 'Hard',
+                [DifficultyLevel.Expert]: 'Expert'
+            };
+
+            // Create new game state with backend data
+            setGameState({
+                gameName: `New Imported Game`,
+                board: stringToBoard(data.puzzle, true),
+                initialPuzzle: data.puzzle,
+                currentState: data.puzzle,
+                completedSolution: data.solution,
+                notes: null,
+                difficulty: 5,
+                gameStatus: GameStatus.InProgress,
+                createdAt: now,
+                lastPlayedAt: now,
+                elapsedTime: 0,
+                hintsUsed: 0,
+                selectedCell: null,
+                notesMode: false,
+                isTimerRunning: true,
+                isLoading: false,
+                isSaving: false,
+                isSaved: false,
+                error: null
+            });
+
+            console.log('New game started successfully');
+
+        } catch (error) {
+            console.error('Failed to start new game:', error);
+
+            let errorMessage = 'Failed to load new puzzle';
+
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
+                } else if (error.request) {
+                    errorMessage = 'Unable to connect to server. Please check your internet connection.';
+                }
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+        }
     }, []);
 
     const setCompletedSolution = useCallback((solution: string) => {
