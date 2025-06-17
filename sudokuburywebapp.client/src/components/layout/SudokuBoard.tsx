@@ -13,9 +13,6 @@ const SudokuBoard: FC = () => {
         const { row, col } = selectedCell;
         const cell = board[row][col];
 
-        // Prevent input on fixed cells
-        if (cell.isFixed) return;
-
         switch (event.key) {
             case '1':
             case '2':
@@ -26,6 +23,7 @@ const SudokuBoard: FC = () => {
             case '7':
             case '8':
             case '9':
+                if (cell.isFixed) return;
                 event.preventDefault();
                 const value = parseInt(event.key);
 
@@ -51,6 +49,7 @@ const SudokuBoard: FC = () => {
             case 'Backspace':
             case 'Delete':
             case '0':
+                if (cell.isFixed) return;
                 event.preventDefault();
                 updateCell(row, col, 0);
                 setCellNotes(row, col, []);
@@ -58,12 +57,14 @@ const SudokuBoard: FC = () => {
 
             case 'n':
             case 'N':
+                if (cell.isFixed) return;
                 event.preventDefault();
                 toggleNotesMode();
                 break;
 
             case 'c':
             case 'C':
+                if (cell.isFixed) return;
                 event.preventDefault();
                 const confirmClear = window.confirm(
                     'Are you sure you want to clear all entered numbers? This will remove all your progress while keeping the original puzzle intact.'
@@ -94,6 +95,7 @@ const SudokuBoard: FC = () => {
                 break;
 
             case 'Escape':
+                if (cell.isFixed) return;
                 event.preventDefault();
                 clearSelection();
                 break;
