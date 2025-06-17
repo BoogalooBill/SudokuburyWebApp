@@ -1,5 +1,6 @@
 import { type FC, useState, useCallback } from 'react';
 import { useGame, DifficultyLevel } from '../../contexts/GameContext';
+import { useAuth } from "../../contexts/AuthContext";
 import '../../styles/GameOptions.css';
 
 
@@ -16,8 +17,13 @@ const GameOptions: FC = () => {
         loadBoardFromString,
         useHint,
         checkSolution,
-        pauseTimer
+        pauseTimer,
+        setError,
+        clearError
     } = useGame();
+
+    //get authentication if any
+    const { isAuthenticated } = useAuth();
 
     //saved games modal
     const [showSaveModal, setShowSaveModal] = useState(false);
@@ -66,6 +72,11 @@ const GameOptions: FC = () => {
 
     // Handle Save Game 
     const handleSaveGame = useCallback(async () => {
+        if (!isAuthenticated) {
+            setError("You must login to save a game.", "error");
+            return;
+        }
+
         await saveGame(saveGameName || gameState.gameName, saveNotes);
 
         if (!gameState.error) {
@@ -76,6 +87,11 @@ const GameOptions: FC = () => {
     }, [saveGame, saveGameName, saveNotes, gameState.gameName, gameState.error]);
 
     const openSaveModal = useCallback(() => {
+        if (!isAuthenticated) {
+            setError("You must log in to save games.", "error");
+            return;
+        }
+
         setSaveGameName(gameState.gameName);
         setSaveNotes(gameState.notes || '');
         setShowSaveModal(true);
@@ -83,6 +99,11 @@ const GameOptions: FC = () => {
 
     // Handle Load Game 
     const handleLoadGame = useCallback(async () => {
+        if (!isAuthenticated) {
+            setError("You must login to load a game.", "error");
+            return;
+        };
+
         if (!checkAuthStatus()) {
             setLoadGamesError("Please log in to view your saved games.");
             return;
@@ -138,7 +159,7 @@ const GameOptions: FC = () => {
             setShowImportModal(false);
             setImportText('');
         } else {
-            alert('Please enter a valid 81-character string containing only digits 0-9.');
+            setError('Please enter a valid 81-character string containing only digits 0-9.', "error");
         }
     }, [importText, loadBoardFromString]);
 
@@ -150,22 +171,33 @@ const GameOptions: FC = () => {
     // Handle Check Solution
     const handleCheckSolution = useCallback(() => {
         const currentBoard = getBoardAsString();
+        const isBlank = currentBoard === "0".repeat(81);
         const isEmpty = currentBoard.includes('0');
+
+        if (isBlank) {
+            setError("Board is blank. Start or load a new game.", "warning");
+            return;
+        }
 
         if (isEmpty) {
             const filledCells = currentBoard.split('').filter(cell => cell !== '0').length;
-            alert(`Puzzle is not complete. You have filled ${filledCells} out of 81 cells.`);
+            setError(`Puzzle is not complete. You have filled ${filledCells} out of 81 cells.`, "warning");
             return;
         }
 
         const isCorrect = checkSolution();
         if (isCorrect) {
-            alert('Congratulations! You solved the puzzle correctly!');
             gameState.gameStatus = 2;
             pauseTimer();
-            saveGame();
+
+            if (isAuthenticated) {
+                saveGame();
+            }
+
+            setError('Congratulations! You solved the puzzle correctly!', "success");
+
         } else {
-            alert('The solution contains errors. Check for duplicate numbers in rows, columns, or 3x3 boxes.');
+            setError('The solution contains errors. Check for duplicate numbers in rows, columns, or 3x3 boxes.', "warning");
         }
 
         
@@ -280,7 +312,7 @@ const GameOptions: FC = () => {
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h4>Select Difficulty</h4>
-                            <button className="close-button" onClick={closeModals}>×</button>
+                            <button className="close-button" onClick={closeModals}>X</button>
                         </div>
                         <div className="difficulty-options">
                             <button
@@ -325,7 +357,7 @@ const GameOptions: FC = () => {
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h4>Import Board</h4>
-                            <button className="close-button" onClick={closeModals}>×</button>
+                            <button className="close-button" onClick={closeModals}>X</button>
                         </div>
                         <div className="modal-body">
                             <p>Enter an 81-character string representing the Sudoku board:</p>
@@ -362,7 +394,7 @@ const GameOptions: FC = () => {
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h4>Export Board</h4>
-                            <button className="close-button" onClick={closeModals}>×</button>
+                            <button className="close-button" onClick={closeModals}>X</button>
                         </div>
                         <div className="modal-body">
                             <p>Board string (copied to clipboard):</p>
@@ -391,18 +423,6 @@ const GameOptions: FC = () => {
                         </div>
 
                         <div className="modal-body">
-                            {gameState.error && (
-                                <div className="error-message">
-                                    <span className="error-icon">X</span>
-                                    <span>{gameState.error}</span>
-                                    <button
-                                        className="import-button"
-                                    >
-                                        Dismiss
-                                    </button>
-                                </div>
-                            )}
-
                             {gameState.isSaving ? (
                                 <div className="loading-container">
                                     <div className="loading-spinner"></div>
@@ -469,21 +489,6 @@ const GameOptions: FC = () => {
                         </div>
 
                         <div className="modal-body">
-                            {(loadGamesError || gameState.error) && (
-                                <div className="error-message">
-                                    <span className="error-icon">X</span>
-                                    <span>{loadGamesError || gameState.error}</span>
-                                    <button
-                                        className="import-button"
-                                        onClick={() => {
-                                            setLoadGamesError('');
-                                        }}
-                                    >
-                                        Dismiss
-                                    </button>
-                                </div>
-                            )}
-
                             {isLoadingGames ? (
                                 <div className="loading-container">
                                     <div className="loading-spinner"></div>

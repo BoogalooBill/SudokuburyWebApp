@@ -10,6 +10,7 @@ const Navbar: FC = () => {
     const handleLogout = async (): Promise<void> => {
         await logout();
         navigate("/");
+        window.location.reload();
     };
 
     const handleLogin = (): void => {

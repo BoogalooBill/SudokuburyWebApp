@@ -102,6 +102,7 @@ export interface GameState {
     isSaving: boolean;
     isSaved: boolean;
     error: string | null;
+    errorType: "error" | "success" | "info" | "warning" | null;
 }
 
 //response type interfaces
@@ -164,6 +165,8 @@ export interface GameContextType {
     resetTimer: () => void;
 
     // Utility
+    setError: (message: string, messageType: string) => void;
+    clearError: () => void;
     formatElapsedTime: () => string;
     getBoardAsString: () => string;
     loadBoardFromString: (boardString: string) => void;
@@ -283,7 +286,8 @@ const createInitialGameState = (): GameState => ({
     isLoading: false,
     isSaving: false,
     isSaved: false,
-    error: null
+    error: null,
+    errorType: null
 });
 
 // Context creation
@@ -496,7 +500,8 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
                 isLoading: false,
                 isSaving: false,
                 isSaved: false,
-                error: null
+                error: null,
+                errorType: null
             });
 
             console.log('New game started successfully');
@@ -781,11 +786,21 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
     // Game actions
     const useHint = useCallback(() => {
         setGameState(prev => {
-            //check if there is a solution provided. If the game was imported, it will not have a solution attached.
+            const blankState = "0".repeat(81)
+            if (prev.currentState === blankState) {
+                return {
+                    ...prev,
+                    error: "There is no board, so there are no hints to give",
+                    errorType: "warning"
+                };
+            }
+
+            //check if there is a solution provided
             if (!prev.completedSolution) {
                 return {
                     ...prev,
-                    error: "No solution accompanied with this puzzle. Imported games will not have a solution associated with the puzzle."
+                    error: "No solution accompanied with this puzzle.",
+                    errorType: "error"
                 };
             }
 
@@ -793,15 +808,8 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
             if (prev.gameStatus == 2) {
                 return {
                     ...prev,
-                    error: "Game is already completed. No hints to give."
-                };
-            }
-
-            const blankState = "0".repeat(81)
-            if (prev.currentState === blankState) {
-                return {
-                    ...prev,
-                    error: "There is no board, so there is no hints to give"
+                    error: "Game is already completed. No hints to give.",
+                    errorType: "success"
                 };
             }
 
@@ -837,7 +845,8 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
                 if (emptyCells.length === 0) {
                     return {
                         ...prev,
-                        error: "There are no empty cells to give hints!"
+                        error: "There are no empty cells to give hints!",
+                        errorType: "warning"
                     };
                 }
 
@@ -1000,12 +1009,6 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
             }
 
             const now = new Date();
-            const difficultyNames = {
-                [DifficultyLevel.Easy]: 'Easy',
-                [DifficultyLevel.Medium]: 'Medium',
-                [DifficultyLevel.Hard]: 'Hard',
-                [DifficultyLevel.Expert]: 'Expert'
-            };
 
             // Create new game state with backend data
             setGameState({
@@ -1027,7 +1030,8 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
                 isLoading: false,
                 isSaving: false,
                 isSaved: false,
-                error: null
+                error: null,
+                errorType: null
             });
 
             console.log('New game started successfully');
@@ -1056,6 +1060,24 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
         }));
     }, []);
 
+    const clearError = useCallback(() => {
+        setGameState(prev => ({
+            ...prev,
+            error: null,
+            errorType: null
+        }));
+    }, []);
+
+    const setError = useCallback((message: string, messageType: string) => {
+        const messageTypes = ["error", "success", "info", "warning"];
+        const validMessageType = messageTypes.includes(messageType) ? messageType as "error" | "success" | "info" | "warning" : null;
+        setGameState(prev => ({
+            ...prev,
+            error: message,
+            errorType: validMessageType
+        }));
+    }, []);
+
     const contextValue: GameContextType = {
         gameState,
         updateCell,
@@ -1080,7 +1102,9 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
         formatElapsedTime,
         getBoardAsString,
         loadBoardFromString,
-        setCompletedSolution
+        setCompletedSolution,
+        clearError,
+        setError
     };
 
     return (

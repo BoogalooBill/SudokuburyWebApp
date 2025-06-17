@@ -1,0 +1,262 @@
+/* ErrorDisplay.css - Global error display styling */
+
+.error-display-container {
+    position: fixed;
+    top: 4rem; /* Below the navbar */
+    left: 0;
+    right: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 1rem 0 1rem; /* Added top padding to create space */
+    pointer-events: none; /* Allow clicks to pass through container */
+}
+
+.error-display {
+    border: 2px solid #632626;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 100%;
+    animation: slideDown 0.3s ease-out;
+    pointer-events: auto; /* Re-enable clicks for the actual error display */
+}
+
+    /* Error styling (default) */
+    .error-display.error {
+        background-color: #2d1b1b;
+        border-color: #632626;
+    }
+
+        .error-display.error .error-message {
+            color: #f87171;
+        }
+
+        .error-display.error .error-dismiss:hover {
+            color: #f87171;
+        }
+
+    /* Success styling with celebration animation */
+    .error-display.success {
+        background-color: #1a2b1a;
+        border-color: #2d5a2d;
+        animation: slideDown 0.3s ease-out, successPulse 2s ease-in-out;
+    }
+
+        .error-display.success .error-message {
+            color: #4ade80;
+        }
+
+        .error-display.success .error-dismiss:hover {
+            color: #4ade80;
+        }
+
+/* Success celebration animation */
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(74, 222, 128, 0.3);
+    }
+}
+
+/* Warning styling */
+.error-display.warning {
+    background-color: #2d2a1b;
+    border-color: #5a4d26;
+}
+
+    .error-display.warning .error-message {
+        color: #fbbf24;
+    }
+
+    .error-display.warning .error-dismiss:hover {
+        color: #fbbf24;
+    }
+
+/* Info styling */
+.error-display.info {
+    background-color: #1b252d;
+    border-color: #264a5a;
+}
+
+    .error-display.info .error-message {
+        color: #60a5fa;
+    }
+
+    .error-display.info .error-dismiss:hover {
+        color: #60a5fa;
+    }
+
+.error-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+}
+
+.error-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.error-message {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    flex: 1;
+    text-align: left; /* Ensure left alignment */
+    margin: 0; /* Remove any default margins */
+}
+
+.error-message.success {
+    background-color: #1a2b1a;
+    border-color: #2d5a2d;
+    animation: slideDown 0.3s ease-out, successPulse 2s ease-in-out;
+}
+
+    .error-message.success .error-message {
+        color: #4ade80;
+    }
+
+    .error-message.success .error-dismiss:hover {
+        color: #4ade80;
+    }
+
+.error-message.error {
+    background-color: #2d1b1b;
+    border-color: #632626;
+}
+
+    .error-message.error .error-message {
+        color: #f87171;
+    }
+
+    .error-message.error .error-dismiss:hover {
+        color: #f87171;
+    }
+
+.error-message.warning {
+    background-color: #2d2a1b;
+    border-color: #5a4d26;
+}
+
+    .error-message.warning .error-message {
+        color: #fbbf24;
+    }
+
+    .error-message.warning .error-dismiss:hover {
+        color: #fbbf24;
+    }
+
+
+.error-message.info {
+    background-color: #1b252d;
+    border-color: #264a5a;
+}
+
+    .error-message.info .error-message {
+        color: #60a5fa;
+    }
+
+    .error-message.info .error-dismiss:hover {
+        color: #60a5fa;
+    }
+
+.error-dismiss {
+    background: none;
+    border: none;
+    color: #a1a1aa;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+}
+
+    .error-dismiss:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.1);
+    }
+
+    .error-dismiss:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #f87171;
+        transform: scale(1.1);
+    }
+
+/* Animation */
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Auto-hide animation */
+.error-display.auto-hide {
+    animation: slideUp 0.3s ease-in forwards;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .error-display-container {
+        padding: 1.5rem 0.5rem 0 0.5rem; /* Maintain spacing on mobile */
+    }
+
+    .error-content {
+        padding: 12px 16px;
+        gap: 10px;
+    }
+
+    .error-message {
+        font-size: 13px;
+    }
+
+    .error-icon {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-display-container {
+        padding: 1rem 0.25rem 0 0.25rem; /* Maintain spacing on small mobile */
+    }
+
+    .error-content {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .error-message {
+        font-size: 12px;
+    }
+}

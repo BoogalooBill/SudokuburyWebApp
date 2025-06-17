@@ -5,6 +5,7 @@ import Navbar from './components/layout/Navbar';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import GameSpace from './components/layout/GameSpace';
+import ErrorDisplay from './components/layout/ErrorDisplay';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
                 <Router>
                     <div className="App">
                         <Navbar />
+                        <ErrorDisplay />
                         <main>
                             <Routes>
                                 <Route path="/login" element={<Login />} />

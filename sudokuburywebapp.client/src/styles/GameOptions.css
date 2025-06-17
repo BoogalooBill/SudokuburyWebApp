@@ -439,6 +439,20 @@
     margin-left: 12px;
 }
 
+.option-button.disabled {
+    background-color: #2a2a3e !important;
+    color: #6b7280 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    border: 2px solid #3a3a5c !important;
+}
+
+    .option-button.disabled:hover {
+        background-color: #2a2a3e !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
 /* Check Solution Button Highlight - when board is complete */
 .option-button.check-complete {
     background-color: #10b981 !important;
