@@ -7,7 +7,7 @@ const StatisticsCard: React.FC = () => {
     const { elapsedTime, hintsUsed, difficulty } = gameState;
 
     // Get difficulty display info
-    const getDifficultyInfo = (diff: DifficultyLevel) => {
+    const getDifficultyInfo = (diff: typeof DifficultyLevel[keyof typeof DifficultyLevel]) => {
         switch (diff) {
             case DifficultyLevel.Easy:
                 return { name: 'Easy', color: '#10b981', icon: '*' };
@@ -18,7 +18,7 @@ const StatisticsCard: React.FC = () => {
             case DifficultyLevel.Expert:
                 return { name: 'Expert', color: '#8b5cf6', icon: '****' };
             default:
-                return { name: 'Unknown', color: '#6b7280', icon: '?' };
+                return { name: 'Imported', color: '#6b7280', icon: '?' };
         }
     };
 
@@ -36,7 +36,7 @@ const StatisticsCard: React.FC = () => {
                     <div className="stat-icon">⏱️</div>
                     <div className="stat-details">
                         <div className="stat-label">Time</div>
-                        <div className="stat-value">{formatElapsedTime()}</div>
+                        <div className="stat-value">{elapsedTime ? formatElapsedTime() : formatElapsedTime()}</div> {/* because TS gets mad if I declare values and dont use them */}
                     </div>
                 </div>
 

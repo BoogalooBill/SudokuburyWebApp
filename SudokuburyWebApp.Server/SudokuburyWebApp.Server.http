@@ -1,6 +1,5 @@
 @SudokuburyWebApp.Server_HostAddress = https://localhost:7203
 
-
 ###
 
 POST {{SudokuburyWebApp.Server_HostAddress}}/api/auth/register

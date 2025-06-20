@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type FC, useState, useCallback } from 'react';
 import { useGame, DifficultyLevel } from '../../contexts/GameContext';
 import { useAuth } from "../../contexts/AuthContext";
@@ -18,8 +19,7 @@ const GameOptions: FC = () => {
         useHint,
         checkSolution,
         pauseTimer,
-        setError,
-        clearError
+        setError
     } = useGame();
 
     //get authentication if any
@@ -32,10 +32,12 @@ const GameOptions: FC = () => {
 
     //load games modal
     const [showLoadModal, setShowLoadModal] = useState(false);
-    const [savedGamesList, setSavedGamesList] = useState([]);
-    const [selectedGameId, setSelectedGameId] = useState(null);
+    const [savedGamesList, setSavedGamesList] = useState<any[]>([]);
+    const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
     const [isLoadingGames, setIsLoadingGames] = useState(false);
     const [loadGamesError, setLoadGamesError] = useState('');
+
+    console.log(loadGamesError);
 
     //modals for difficulty, import, and export
     const [showDifficultyModal, setShowDifficultyModal] = useState(false);
@@ -49,9 +51,9 @@ const GameOptions: FC = () => {
     }, []);
 
     // Handle difficulty selection
-    const handleDifficultySelect = useCallback((difficulty: DifficultyLevel) => {
+    const handleDifficultySelect = useCallback((difficulty: typeof DifficultyLevel[keyof typeof DifficultyLevel]) => {
         setShowDifficultyModal(false);
-        const difficultyNames = {
+        const difficultyNames: {[index:number]:string} = {
             [DifficultyLevel.Easy]: 'Easy',
             [DifficultyLevel.Medium]: 'Medium',
             [DifficultyLevel.Hard]: 'Hard',
@@ -84,7 +86,7 @@ const GameOptions: FC = () => {
             setSaveGameName('');
             setSaveNotes('');
         }
-    }, [saveGame, saveGameName, saveNotes, gameState.gameName, gameState.error]);
+    }, [saveGame, saveGameName, saveNotes, gameState.gameName, gameState.error, isAuthenticated, setError]);
 
     const openSaveModal = useCallback(() => {
         if (!isAuthenticated) {
@@ -95,7 +97,7 @@ const GameOptions: FC = () => {
         setSaveGameName(gameState.gameName);
         setSaveNotes(gameState.notes || '');
         setShowSaveModal(true);
-    }, [gameState.gameName, gameState.notes]);
+    }, [gameState.gameName, gameState.notes, isAuthenticated, setError]);
 
     // Handle Load Game 
     const handleLoadGame = useCallback(async () => {
@@ -115,22 +117,22 @@ const GameOptions: FC = () => {
 
         try {
             const games = await getSavedGames();
-            setSavedGamesList(games);
-        } catch (error) {
+            setSavedGamesList(games!);
+        } catch (error: any) {
             setLoadGamesError(error.message || "Failed to retrieve saved games");
             setSavedGamesList([]);
         } finally {
             setIsLoadingGames(false);
         }
 
-    }, [checkAuthStatus, getSavedGames]);
+    }, [checkAuthStatus, getSavedGames, isAuthenticated, setError]);
 
     const handleLoadSelectedGame = useCallback(async () => {
         if (!selectedGameId) return;
 
         await loadSavedGame(selectedGameId);
         closeModals();
-    })
+    }, [selectedGameId, loadSavedGame]);
 
     const closeLoadModal = useCallback(() => {
         setShowLoadModal(false);
@@ -161,7 +163,7 @@ const GameOptions: FC = () => {
         } else {
             setError('Please enter a valid 81-character string containing only digits 0-9.', "error");
         }
-    }, [importText, loadBoardFromString]);
+    }, [importText, loadBoardFromString, setError]);
 
     // Handle Hint
     const handleHint = useCallback(() => {
@@ -200,8 +202,8 @@ const GameOptions: FC = () => {
             setError('The solution contains errors. Check for duplicate numbers in rows, columns, or 3x3 boxes.', "warning");
         }
 
-        
-    }, [checkSolution, getBoardAsString]);
+
+    }, [checkSolution, getBoardAsString, setError, gameState, pauseTimer, isAuthenticated, saveGame]);
 
     // Close modals
     const closeModals = useCallback(() => {
@@ -218,7 +220,7 @@ const GameOptions: FC = () => {
         setLoadGamesError("");
     }, []);
 
-    const formatDate = useCallback((dateString) => {
+    const formatDate = useCallback((dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
@@ -228,9 +230,9 @@ const GameOptions: FC = () => {
         });
     }, []);
 
-    const formatDifficulty = useCallback((difficultyNum) => {
+    const formatDifficulty = useCallback((difficultyNum: number) => {
         const difficulties = { 1: 'Easy', 2: 'Medium', 3: 'Hard', 4: 'Expert' };
-        return difficulties[difficultyNum] || 'Unknown';
+        return difficulties[difficultyNum as keyof typeof difficulties] || 'Unknown';
     }, []);
 
     const isBoardComplete = useCallback(() => {
@@ -258,7 +260,7 @@ const GameOptions: FC = () => {
                     onClick={openSaveModal}
                     disabled={gameState.isSaving}
                 >
-                    {gameState.isSaving ? "Saving..." : gameState.isSaved ? "Game Saved": "Save Game" }
+                    {gameState.isSaving ? "Saving..." : gameState.isSaved ? "Game Saved" : "Save Game"}
                 </button>
 
                 <button

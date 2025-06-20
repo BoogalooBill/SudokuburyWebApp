@@ -44,7 +44,7 @@ const Navbar: FC = () => {
                     {isAuthenticated ? (
                         <>
                             <div className="user-info">
-                                <span>Welcome!</span>
+                                <span>Logged in as {user?.email}</span>
                             </div>
                             <button
                                 onClick={handleLogout}

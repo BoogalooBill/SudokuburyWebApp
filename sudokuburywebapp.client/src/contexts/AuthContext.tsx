@@ -28,13 +28,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(savedToken);
       axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
       //quick check to see if token is still valid
-      verifyToken(savedToken);
+      verifyToken();
     } else {
       setLoading(false);
     }
   }, []);
 
-  const verifyToken = async (authToken: string): Promise<void> => {
+  const verifyToken = async (): Promise<void> => {
     try {
       const response = await axios.get<AuthResponse>('/api/auth/profile');
       if (response.data.user) {

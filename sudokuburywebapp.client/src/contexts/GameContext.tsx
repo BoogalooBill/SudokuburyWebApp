@@ -44,20 +44,20 @@ apiClient.interceptors.response.use(
 )
 
 // Enums matching backend
-export enum DifficultyLevel {
-    Easy = 1,
-    Medium = 2,
-    Hard = 3,
-    Expert = 4,
-    Imported = 5
-}
+export const DifficultyLevel = {
+    Easy: 1,
+    Medium: 2,
+    Hard: 3,
+    Expert: 4,
+    Imported: 5
+} as const;
 
-export enum GameStatus {
-    InProgress = 1,
-    Completed = 2,
-    Paused = 3,
-    Abandoned = 4
-}
+export const GameStatus = {
+    InProgress: 1,
+    Completed: 2,
+    Paused: 3,
+    Abandoned: 4
+} as const;
 
 // Sudoku cell structure
 export interface SudokuCell {
@@ -83,8 +83,8 @@ export interface GameState {
     notes: string | null; // Additional notes about the game
 
     // Game settings
-    difficulty: DifficultyLevel;
-    gameStatus: GameStatus;
+    difficulty: 1 | 2 | 3 | 4 | 5;
+    gameStatus: 1 | 2 | 3 | 4;
 
     // Timestamps
     createdAt: Date;
@@ -145,10 +145,10 @@ export interface GameContextType {
     clearUserEntries: () => void;
 
     // Game management
-    startNewGame: (difficulty: DifficultyLevel, gameName?: string) => Promise<void>;
+    startNewGame: (difficulty: typeof DifficultyLevel[keyof typeof DifficultyLevel], gameName?: string) => Promise<void>;
     saveGame: (gameName?: string, notes?: string) => Promise<void>;
     getSavedGames: () => Promise<void>;
-    loadSavedGame: (savedGameId: number) => Promise<SavedGamesTypeDetailed>;
+    loadSavedGame: (savedGameId: number) => Promise<SavedGamesTypeDetailed> | Promise<void>;
     checkAuthStatus: () => boolean;
     pauseGame: () => void;
     resumeGame: () => void;
@@ -172,52 +172,6 @@ export interface GameContextType {
     loadBoardFromString: (boardString: string) => void;
     setCompletedSolution: (solution: string) => void;
 }
-
-// Helper function to parse .NET TimeSpan and convert to seconds
-const parseTimeSpanToSeconds = (timeSpan: string | number | null | undefined): number => {
-    if (!timeSpan) {
-        return 0;
-    }
-
-    if (typeof timeSpan === 'number') {
-        return Math.floor(timeSpan);
-    }
-
-    if (typeof timeSpan !== 'string') {
-        return 0;
-    }
-
-    try {
-        // Format: "HH:MM:SS" or "H:MM:SS"
-        if (/^\d{1,2}:\d{2}:\d{2}$/.test(timeSpan)) {
-            const parts = timeSpan.split(':');
-            const hours = parseInt(parts[0], 10) || 0;
-            const minutes = parseInt(parts[1], 10) || 0;
-            const seconds = parseInt(parts[2], 10) || 0;
-            return (hours * 3600) + (minutes * 60) + seconds;
-        }
-
-        // Format: "DD.HH:MM:SS" (with days)
-        if (/^\d+\.\d{1,2}:\d{2}:\d{2}$/.test(timeSpan)) {
-            const daysPart = timeSpan.split('.')[0];
-            const timePart = timeSpan.split('.')[1];
-            const days = parseInt(daysPart, 10) || 0;
-            const [hours, minutes, seconds] = timePart.split(':').map(n => parseInt(n, 10) || 0);
-            return (days * 86400) + (hours * 3600) + (minutes * 60) + seconds;
-        }
-
-        // Fallback: try parsing as number
-        const numValue = parseFloat(timeSpan);
-        if (!isNaN(numValue)) {
-            return numValue > 86400 ? Math.floor(numValue / 1000) : Math.floor(numValue);
-        }
-
-        return 0;
-    } catch (error) {
-        console.error('Error parsing TimeSpan:', timeSpan, error);
-        return 0;
-    }
-};
 
 // Helper function to create empty board
 const createEmptyBoard = (): SudokuCell[][] => {
@@ -443,7 +397,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
     }, [gameState.board]);
 
     const startNewGame = useCallback(async (
-        difficulty: DifficultyLevel,
+        difficulty: (typeof DifficultyLevel[keyof typeof DifficultyLevel]),
         gameName: string = 'New Game'
     ) => {
         // Set loading state
@@ -454,9 +408,17 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
         }));
 
         try {
-            console.log(`Requesting new ${DifficultyLevel[difficulty]} puzzle from backend...`);
+            const difficultyNames = {
+                [DifficultyLevel.Easy]: 'Easy',
+                [DifficultyLevel.Medium]: 'Medium',
+                [DifficultyLevel.Hard]: 'Hard',
+                [DifficultyLevel.Expert]: 'Expert',
+                [DifficultyLevel.Imported]: 'Imported'
+            };
 
-            const response = await apiClient.post('/api/sudoku/generate', { difficulty: DifficultyLevel[difficulty].toLowerCase() });
+            console.log(`Requesting new ${difficultyNames[difficulty]} puzzle from backend...`);
+
+            const response = await apiClient.post('/api/sudoku/generate', { difficulty: difficultyNames[difficulty].toLowerCase() });
 
             // Validate response data
             const data = response.data;
@@ -473,12 +435,6 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
             }
 
             const now = new Date();
-            const difficultyNames = {
-                [DifficultyLevel.Easy]: 'Easy',
-                [DifficultyLevel.Medium]: 'Medium',
-                [DifficultyLevel.Hard]: 'Hard',
-                [DifficultyLevel.Expert]: 'Expert'
-            };
 
             // Create new game state with backend data
             setGameState({
@@ -989,10 +945,9 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
         }));
 
         try {
-            let response;
 
             //Make API call to backend to get the solution for this board and set it as a new game
-            response = await apiClient.post("/api/sudoku/import", { puzzle: boardString })
+            const response = await apiClient.post("/api/sudoku/import", { puzzle: boardString })
 
             // Validate response data
             const data = response.data;
@@ -1049,6 +1004,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
                 }
             } else if (error instanceof Error) {
                 errorMessage = error.message;
+                console.log(errorMessage);
             }
         }
     }, []);

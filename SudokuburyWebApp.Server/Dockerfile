@@ -1,38 +1,62 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# Stage 1: Build Environment
+# Use the official .NET SDK image that includes everything we need to build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
+# Install Node.js 20.x (LTS version)
+RUN apt-get update && apt-get install -y curl
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
+
+# Verify installations
+RUN dotnet --version
+RUN node --version
+RUN npm --version
+
+# Set working directory
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
 
+# Copy solution file
+COPY *.sln ./
 
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS with-node
-RUN apt-get update
-RUN apt-get install curl
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash
-RUN apt-get -y install nodejs
+# Copy project files for dependency restoration
+COPY SudokuburyWebApp.Server/*.csproj ./SudokuburyWebApp.Server/
+COPY sudokuburywebapp.client/*.esproj ./sudokuburywebapp.client/
+COPY sudokuburywebapp.client/package*.json ./sudokuburywebapp.client/
 
+# Restore .NET dependencies
+RUN dotnet restore
 
-FROM with-node AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["SudokuburyWebApp.Server/SudokuburyWebApp.Server.csproj", "SudokuburyWebApp.Server/"]
-COPY ["sudokuburywebapp.client/sudokuburywebapp.client.esproj", "sudokuburywebapp.client/"]
-RUN dotnet restore "./SudokuburyWebApp.Server/SudokuburyWebApp.Server.csproj"
+# Restore Node.js dependencies (INCLUDING dev dependencies for build)
+WORKDIR /app/sudokuburywebapp.client
+RUN npm ci  # Remove --only=production
+
+# Go back to app root
+WORKDIR /app
+
+# Copy all source code
 COPY . .
-WORKDIR "/src/SudokuburyWebApp.Server"
-RUN dotnet build "./SudokuburyWebApp.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./SudokuburyWebApp.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Build and publish the application
+WORKDIR /app/SudokuburyWebApp.Server
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
+# First, let's try building to see any errors
+RUN dotnet build -c Release --no-restore --verbosity detailed
+
+# Then publish with verbose output
+RUN dotnet publish -c Release -o /app/publish --no-restore
+
+# Stage 2: Runtime Environment
+# Use the smaller ASP.NET Core runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+
+# Set working directory
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copy the published application from the build stage
+COPY --from=build-env /app/publish .
+
+# Expose the port that the app will run on
+EXPOSE 8080
+
+# Set the entry point
 ENTRYPOINT ["dotnet", "SudokuburyWebApp.Server.dll"]
