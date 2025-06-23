@@ -1,0 +1,59 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sudokubury-sqlserver
+    user: "0:0"
+    privileged: true
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MyStrongPassword123#
+      - MSSQL_PID=Express
+      - MSSQL_ENABLE_HADR=1
+      - MSSQL_AGENT_ENABLED=false
+    command: >
+      /bin/bash -c "
+      echo 'Starting SQL Server with environment password...' &&
+      /opt/mssql/bin/sqlservr"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - sudokubury-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'MyStrongPassword123#' -C -Q 'SELECT 1' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+      start_period: 120s
+
+  sudokubury-app:
+    build:
+      context: .
+      dockerfile: SudokuburyWebApp.Server/Dockerfile
+    container_name: sudokubury-app
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=SudokuGameAppDb;User Id=sa;Password=MyStrongPassword123#;TrustServerCertificate=true;MultipleActiveResultSets=true;Encrypt=false;
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Jwt__Key=88b86ee56165de42cfb5cc65b616159672e5348c1dddb754f74114df54b91264
+      - Jwt__Issuer=SudokuburyApp
+      - Jwt__Audience=SudokuburyApp
+      - Jwt__ExpireDays=7 
+      - AllowedOrigins__0=http://localhost:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - sudokubury-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+    driver: local
+
+networks:
+  sudokubury-network:
+    driver: bridge

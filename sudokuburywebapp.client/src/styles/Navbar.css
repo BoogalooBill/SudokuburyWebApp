@@ -36,9 +36,9 @@ html, body {
     z-index: 1000;
     margin: 0;
     padding: 0;
-    .navbar-container
+}
 
-{
+    .navbar-container {
     max-width: none; /* Remove max-width constraint */
     width: 100%;
     margin: 0;

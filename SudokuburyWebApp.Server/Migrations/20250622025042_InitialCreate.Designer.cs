@@ -12,8 +12,8 @@ using SudokuburyWebApp.Server.Data;
 namespace SudokuburyWebApp.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250526231724_AddSavedGamesAndStatistics")]
-    partial class AddSavedGamesAndStatistics
+    [Migration("20250622025042_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,6 +289,10 @@ namespace SudokuburyWebApp.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CompletedPuzzle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
