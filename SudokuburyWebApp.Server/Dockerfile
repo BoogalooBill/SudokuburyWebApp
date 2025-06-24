@@ -31,6 +31,9 @@ RUN npm ci
 
 # Go back to app root and copy all source code
 WORKDIR /app
+
+ENV NODE_ENV=production
+
 COPY . .
 
 # Build the client app explicitly

@@ -68,6 +68,12 @@
             background-color: #7c3aed;
         }
 
+    .option-button.secondary {
+        background-color: dimgray;
+        color: white;
+        font-weight: 600;
+    }
+
     .option-button.danger {
         background-color: #ef4444;
         color: white;

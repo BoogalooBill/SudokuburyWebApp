@@ -1,9 +1,16 @@
 import { type FC, createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import axios from 'axios';
 
+const getApiBaseUrl = (): string => {
+    if (process.env.NODE_ENV === "production") {
+        return '';
+    }
+
+    return 'https://localhost:7203';
+}
 
 //axios configuration for backend
-const API_BASE_URL = "https://localhost:7203";
+const API_BASE_URL = getApiBaseUrl();
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,

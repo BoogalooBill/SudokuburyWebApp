@@ -20,19 +20,37 @@ if (builder.Environment.IsProduction())
 // Database configuration - handle both development and production
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Check if we're using LocalDB (not supported in Docker/Linux) and provide fallback
-if (!string.IsNullOrEmpty(connectionString) && connectionString.Contains("localdb"))
+if (builder.Environment.IsProduction() || builder.Environment.IsStaging())
 {
-    // For containerized environments, use environment variable or throw error
-    connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+    // In production/staging, prefer environment variable over config file
+    var envConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+    if (!string.IsNullOrEmpty(envConnectionString))
+    {
+        connectionString = envConnectionString;
+    }
 
+    // Ensure we have a connection string for production
     if (string.IsNullOrEmpty(connectionString))
     {
         throw new InvalidOperationException(
-            "LocalDB is not supported in containerized environments. " +
-            "Please provide a proper SQL Server connection string via environment variable 'ConnectionStrings__DefaultConnection'");
+            "No connection string found for production environment. " +
+            "Please provide a connection string via 'ConnectionStrings__DefaultConnection' environment variable " +
+            "or in appsettings.Production.json");
+    }
+
+    // Validate that we're not using LocalDB in production
+    if (connectionString.Contains("localdb", StringComparison.OrdinalIgnoreCase))
+    {
+        throw new InvalidOperationException(
+            "LocalDB is not supported in production environments. " +
+            "Please provide a proper SQL Server connection string.");
     }
 }
+
+// Always use SQL Server
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+
 
 // Always use SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -59,7 +77,28 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 // JWT Authentication with environment-specific settings
-var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured");
+// JWT Authentication with environment-specific settings
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey))
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        // Provide a default key for development only
+        jwtKey = "klgmFoY4gGmKQzNosVhpRjW9ljWubXNufVaMyNtOf0iVNEZZT1I6t4OSjvaoTUFH";
+        builder.Services.Configure<Microsoft.Extensions.Logging.LoggerFilterOptions>(options =>
+        {
+            options.AddFilter("Program", LogLevel.Warning);
+        });
+
+        var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger<Program>();
+        logger.LogWarning("Using default JWT key for development. Configure Jwt:Key in appsettings.Development.json for production-like testing.");
+    }
+    else
+    {
+        throw new InvalidOperationException("JWT Key not configured. Set the 'Jwt:Key' configuration value.");
+    }
+}
+
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "SudokuburyApp";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "SudokuburyApp";
 

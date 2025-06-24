@@ -37,7 +37,9 @@ const GameOptions: FC = () => {
     const [isLoadingGames, setIsLoadingGames] = useState(false);
     const [loadGamesError, setLoadGamesError] = useState('');
 
-    console.log(loadGamesError);
+    if (loadGamesError !== "") {
+        console.log(loadGamesError);
+    }
 
     //modals for difficulty, import, and export
     const [showDifficultyModal, setShowDifficultyModal] = useState(false);
@@ -64,6 +66,10 @@ const GameOptions: FC = () => {
 
     // Handle Clear button with confirmation
     const handleClearBoard = useCallback(() => {
+        if (gameState.gameStatus === 2) {
+            setError("This game is already completed. Start a new game or load an unfinished one.", "warning");
+            return;
+        }
         const confirmClear = window.confirm(
             'Are you sure you want to clear all entered numbers? This will remove all your progress while keeping the original puzzle intact.'
         );
@@ -75,7 +81,12 @@ const GameOptions: FC = () => {
     // Handle Save Game 
     const handleSaveGame = useCallback(async () => {
         if (!isAuthenticated) {
-            setError("You must login to save a game.", "error");
+            setError("You must login to save a game. If you'd like to save the game without logging in, use the Export Board feature and save to a file.", "error");
+            return;
+        }
+
+        if (gameState.gameStatus === 2) {
+            setError("This game is already completed. Start a new game or load an unfinished one.", "warning");
             return;
         }
 
@@ -90,7 +101,12 @@ const GameOptions: FC = () => {
 
     const openSaveModal = useCallback(() => {
         if (!isAuthenticated) {
-            setError("You must log in to save games.", "error");
+            setError("You must login to save a game. If you'd like to save the game without logging in, use the Export Board feature and save to a file.", "error");
+            return;
+        }
+
+        if (gameState.gameStatus === 2) {
+            setError("This game is already completed. Start a new game or load an unfinished one.", "warning");
             return;
         }
 
@@ -102,7 +118,7 @@ const GameOptions: FC = () => {
     // Handle Load Game 
     const handleLoadGame = useCallback(async () => {
         if (!isAuthenticated) {
-            setError("You must login to load a game.", "error");
+            setError("You must login to load a game. If you have a board string, use the Import Board feature to load that game.", "error");
             return;
         };
 
@@ -167,11 +183,21 @@ const GameOptions: FC = () => {
 
     // Handle Hint
     const handleHint = useCallback(() => {
+        if (gameState.gameStatus === 2) {
+            setError("This game is already completed. Start a new game or load an unfinished one.", "warning");
+            return;
+        }
+
         useHint();
     }, [useHint]);
 
     // Handle Check Solution
     const handleCheckSolution = useCallback(() => {
+        if (gameState.gameStatus === 2) {
+            setError("This game is already completed. Start a new game or load an unfinished one.", "warning");
+            return;
+        }
+
         const currentBoard = getBoardAsString();
         const isBlank = currentBoard === "0".repeat(81);
         const isEmpty = currentBoard.includes('0');
@@ -236,6 +262,10 @@ const GameOptions: FC = () => {
     }, []);
 
     const isBoardComplete = useCallback(() => {
+        if (gameState.gameStatus === 2) {
+            return false;
+        }
+
         return gameState.board.every(row =>
             row.every(cell => cell.value !== 0)
         );
@@ -283,7 +313,7 @@ const GameOptions: FC = () => {
                     disabled={gameState.gameStatus === 2}
                     title={isBoardComplete() ? "Board complete! Click to check your solution" : "Check if your current solution is correct"}
                 >
-                    Check Solution
+                    { gameState.gameStatus === 2 ? "Solved" : "Check Solution" }
                 </button>
 
                 <button
