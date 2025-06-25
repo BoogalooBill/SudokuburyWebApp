@@ -150,12 +150,14 @@ export interface GameContextType {
     selectCell: (row: number, col: number) => void;
     clearSelection: () => void;
     clearUserEntries: () => void;
+    clearBoardCompletely: () => void;
 
     // Game management
     startNewGame: (difficulty: typeof DifficultyLevel[keyof typeof DifficultyLevel], gameName?: string) => Promise<void>;
     saveGame: (gameName?: string, notes?: string) => Promise<void>;
     getSavedGames: () => Promise<void>;
     loadSavedGame: (savedGameId: number) => Promise<SavedGamesTypeDetailed> | Promise<void>;
+    deleteSavedGame: (gameId: number, gameName?: string) => Promise<void>;
     checkAuthStatus: () => boolean;
     pauseGame: () => void;
     resumeGame: () => void;
@@ -402,6 +404,31 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
     const getBoardAsString = useCallback((): string => {
         return boardToString(gameState.board);
     }, [gameState.board]);
+
+    const clearBoardCompletely = useCallback(() => {
+        setGameState(prev => ({
+            gameName: 'New Game',
+            board: createEmptyBoard(),
+            initialPuzzle: '0'.repeat(81),
+            currentState: '0'.repeat(81),
+            completedSolution: '', // Will be populated when loading from backend
+            notes: null,
+            difficulty: prev.difficulty || DifficultyLevel.Medium,
+            gameStatus: GameStatus.Abandoned,
+            createdAt: new Date(),
+            lastPlayedAt: new Date(),
+            elapsedTime: 0,
+            hintsUsed: 0,
+            selectedCell: null,
+            notesMode: false,
+            isTimerRunning: false,
+            isLoading: false,
+            isSaving: false,
+            isSaved: false,
+            error: null,
+            errorType: null
+        }));
+    }, []);
 
     const startNewGame = useCallback(async (
         difficulty: (typeof DifficultyLevel[keyof typeof DifficultyLevel]),
@@ -746,6 +773,36 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
         }));
     }, []);
 
+
+    const deleteSavedGame = useCallback(async (gameId: number, gameName?:string) => {
+        const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+        if (!token) {
+            setGameState(prev => ({
+                ...prev,
+                error: "Please log in to view saved games and delete them."
+            }));
+        }
+
+        try {
+            console.log(`Deleting ${gameName || gameId}...`);
+            const response = await apiClient.delete(`/api/savedgames/id?id=${gameId}`);
+            console.log("Game deleted.");
+            return response.data
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 401) {
+                    throw new Error("Session expired. Please log in again.");
+                } else if (error.response?.status === 403) {
+                    throw new Error("You do not have permission to delete this game.");
+                } else if (error.response) {
+                    throw new Error(error.response.data?.message || `Server error ${error.response.status}`);
+                } else if (error.request) {
+                    throw new Error("Unable to connect to server. Please check your internet connection.");
+                }
+            }
+            throw error;
+        }
+    }, []);
     // Game actions
     const useHint = useCallback(() => {
         setGameState(prev => {
@@ -1048,9 +1105,11 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
         selectCell,
         clearSelection,
         clearUserEntries,
+        clearBoardCompletely,
         startNewGame,
         getSavedGames,
         loadSavedGame,
+        deleteSavedGame,
         checkAuthStatus,
         saveGame,
         pauseGame,

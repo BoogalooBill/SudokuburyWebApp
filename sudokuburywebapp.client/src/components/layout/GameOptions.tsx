@@ -12,8 +12,10 @@ const GameOptions: FC = () => {
         saveGame,
         loadSavedGame,
         getSavedGames,
+        deleteSavedGame,
         checkAuthStatus,
         clearUserEntries,
+        clearBoardCompletely,
         getBoardAsString,
         loadBoardFromString,
         useHint,
@@ -156,6 +158,28 @@ const GameOptions: FC = () => {
         setSavedGamesList([]);
         setLoadGamesError('');
     }, []);
+
+    const handleDeleteSavedGame = useCallback(async (gameId: number, gameName?: string) => {
+        const confirmDelete = window.confirm(`Are you sure you want to delete ${gameName || gameId}?`);
+        if (!confirmDelete) {
+            return;
+        }
+
+        try {
+            if (Number(gameId) === Number(gameState.id)) { //clear the board of the current game if the current loaded game is the one the needs to be deleted.
+                clearBoardCompletely();
+            }
+            await deleteSavedGame(gameId, gameName);
+
+            setSelectedGameId(null);
+            setSavedGamesList(prev => prev.filter(game => game.id !== gameId));
+
+        } catch (error: any) {
+            setLoadGamesError(error.message || "Failed to delete the selected game");
+        } finally {
+            setIsLoadingGames(false);
+        }
+    }, [deleteSavedGame, gameState.id]);
 
     // Handle Export Board
     const handleExportBoard = useCallback(() => {
@@ -563,6 +587,16 @@ const GameOptions: FC = () => {
                                                 <div className="game-status">
                                                     {game.gameStatus === 2 ? 'Completed' : 'In Progress'}
                                                 </div>
+                                                <button
+                                                    className='close-button'
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteSavedGame(game.id);
+                                                    }}
+                                                    title="Delete this saved game"
+                                                >
+                                                    DEL
+                                                </button>
                                             </div>
                                         ))}
                                     </div>
