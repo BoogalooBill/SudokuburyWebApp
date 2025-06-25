@@ -29,9 +29,7 @@ services:
       start_period: 120s
 
   sudokubury-app:
-    build:
-      context: .
-      dockerfile: SudokuburyWebApp.Server/Dockerfile
+    image: boogsdev/sudokubury-webapp:latest  
     container_name: sudokubury-app
     environment:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=SudokuGameAppDb;User Id=sa;Password=MyStrongPassword123#;TrustServerCertificate=true;MultipleActiveResultSets=true;Encrypt=false;
