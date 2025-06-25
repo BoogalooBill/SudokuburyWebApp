@@ -588,14 +588,14 @@ const GameOptions: FC = () => {
                                                     {game.gameStatus === 2 ? 'Completed' : 'In Progress'}
                                                 </div>
                                                 <button
-                                                    className='close-button'
+                                                    className='delete-button danger'
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleDeleteSavedGame(game.id);
                                                     }}
                                                     title="Delete this saved game"
                                                 >
-                                                    DEL
+                                                    Delete
                                                 </button>
                                             </div>
                                         ))}

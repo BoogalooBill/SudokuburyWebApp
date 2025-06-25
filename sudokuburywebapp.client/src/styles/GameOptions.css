@@ -258,6 +258,7 @@
 
 .cancel-button,
 .import-button,
+.delete-button,
 .close-button-modal {
     background-color: #3a3a5c;
     color: #f8f8f2;
@@ -272,6 +273,11 @@
     .cancel-button:hover,
     .close-button-modal:hover {
         background-color: #4a4a6c;
+    }
+    .delete-button.danger {
+        margin-left: 1rem;
+        background-color: darkred;
+        color: white;
     }
 
 .import-button {
