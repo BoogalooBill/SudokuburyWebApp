@@ -1,3 +1,5 @@
+# File is used for local development and testing purposes only. Secrets and sensitive information is handled in GitHub Actions when deployed to AWS.
+
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
