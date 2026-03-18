@@ -103,15 +103,15 @@ resource "aws_ecs_task_definition" "sudokubury_task" {
 				{
 					name = "Jwt__Issuer"
 					value = "SudokuburyApp"
-				}
+				},
 				{
 					name = "Jwt__Audience"
 					value = "SudokuburyApp"
-				}
+				},
 				{
 					name = "Jwt__ExpireDays"
 					value = "7"
-				}
+				},
 				{
 					name = "AllowedOrigins__0"
 					value = "http://${aws_lb.sudokubury.dns_name}"
