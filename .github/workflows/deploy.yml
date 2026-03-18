@@ -20,17 +20,17 @@ jobs:
           aws-region: us-east-2 
 
       - name: Set secrets in Secrets Manager
-        run: |
-          aws secretsmanager put-secret-value \
-            --secret-id sudokubury/db_password \
+        run: >
+          aws secretsmanager put-secret-value 
+            --secret-id sudokubury/db_password 
             --secret-string "${{ secrets.TF_VAR_DB_PASSWORD }}"
 
-          aws secretsmanager put-secret-value \
-            --secret-id sudokubury/jwt_key \
+          aws secretsmanager put-secret-value 
+            --secret-id sudokubury/jwt_key 
             --secret-string "${{ secrets.TF_VAR_JWT_KEY }}"
 
-          aws secretsmanager put-secret-value \
-            --secret-id sudokubury/connection_string \
+          aws secretsmanager put-secret-value 
+            --secret-id sudokubury/connection_string 
             --secret-string "${{ secrets.TF_VAR_CONNECTION_STRING }}"
 
       - name: Set up Terraform
