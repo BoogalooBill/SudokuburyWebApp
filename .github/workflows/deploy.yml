@@ -20,7 +20,7 @@ jobs:
           aws-region: us-east-2 
 
       - name: Set secrets in Secrets Manager
-        run: > 
+        run: | 
           aws secretsmanager put-secret-value \
             --secret-id sudokubury/db_password \
             --secret-string "${{ secrets.TF_VAR_DB_PASSWORD }}"
