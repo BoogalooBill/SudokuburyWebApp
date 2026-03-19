@@ -90,7 +90,7 @@ resource "aws_ecs_task_definition" "sudokubury_task" {
 	container_definitions = jsonencode([
 		{
 			name = "sudokubury-app-container"
-			image = "${aws_ecr_repository.sudokubury.repository_url}:latest"
+			image = "669308277837.dkr.ecr.us-east-2.amazonaws.com/sudokubury:latest"
 			essential = true
 			portMappings = [
 				{

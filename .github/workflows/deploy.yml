@@ -33,17 +33,6 @@ jobs:
             --secret-id sudokubury/connection_string \
             --secret-string "${{ secrets.TF_VAR_CONNECTION_STRING }}"
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        working-directory: infra/terraform
-        run: terraform init
-
-      - name: Terraform Apply
-        working-directory: infra/terraform
-        run: terraform apply -auto-approve
-
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
@@ -58,3 +47,26 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Force ECS Redeployment
+        run: |
+          aws ecs update-service \
+          --cluster sudokubury-cluster \
+          --service sudokubury-app-service \
+          --force-new-deployment
+
+          aws ecs update-service \
+          --cluster sudokubury-cluster \
+          --service sudokubury-db-service \
+          --force-new-deployment
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: infra/terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: infra/terraform
+        run: terraform apply -auto-approve
