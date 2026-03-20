@@ -48,6 +48,17 @@ jobs:
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: infra/terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: infra/terraform
+        run: terraform apply -auto-approve
+
       - name: Force ECS Redeployment
         run: |
           aws ecs update-service \
@@ -59,14 +70,3 @@ jobs:
           --cluster sudokubury-cluster \
           --service sudokubury-db-service \
           --force-new-deployment
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        working-directory: infra/terraform
-        run: terraform init
-
-      - name: Terraform Apply
-        working-directory: infra/terraform
-        run: terraform apply -auto-approve
