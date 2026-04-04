@@ -196,3 +196,19 @@ resource "aws_ecs_service" "db_service" {
 	registry_arn = aws_service_discovery_service.sudokubury.arn
   }
 }
+
+resource "aws_cloudwatch_log_group" "sudokubury_app" {
+  name              = "/ecs/sudokubury-app"
+  retention_in_days = 7
+  tags = {
+    Name = "sudokubury-app-logs"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "sudokubury_sqlserver" {
+  name              = "/ecs/sudokubury-sqlserver"
+  retention_in_days = 7
+  tags = {
+    Name = "sudokubury-sqlserver-logs"
+  }
+}
