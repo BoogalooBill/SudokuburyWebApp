@@ -59,3 +59,24 @@ resource "aws_iam_role" "ecs_task_role" {
 	]
   })
 }
+
+# Define the inline policy for the ECS task role to allow it to access AWS ECR
+resource "aws_iam_role_policy" "ecs_task_execution_ecr_policy" {
+  name = "sudokubury-ecs-task-execution-ecr-policy"
+  role = aws_iam_role.ecs_task_execution_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
