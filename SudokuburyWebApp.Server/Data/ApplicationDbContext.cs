@@ -39,6 +39,11 @@ namespace SudokuburyWebApp.Server.Data
                     .HasMaxLength(81)
                     .IsFixedLength();
 
+                entity.Property(e => e.CompletedPuzzle)
+                    .IsRequired()
+                    .HasMaxLength(81)
+                    .IsFixedLength();
+
                 entity.Property(e => e.Notes)
                     .HasMaxLength(4000); // JSON can be large
 

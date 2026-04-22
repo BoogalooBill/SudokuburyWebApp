@@ -5,79 +5,6 @@ resource "aws_ecs_cluster" "sudokubury" {
   name = "sudokubury-cluster"
 }
 
-# Define the task for the database
-resource "aws_ecs_task_definition" "db_task" {
-  family                   = "sudokubury-db-task"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "1024"
-  memory                   = "2048"
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn            = aws_iam_role.ecs_task_role.arn
-  container_definitions = jsonencode([
-	{
-	  name      = "db-container"
-	  image     = "mcr.microsoft.com/mssql/server:2022-latest"
-	  essential = true
-	  portMappings = [
-		{
-		  containerPort = 1433
-		  hostPort      = 1433
-		  protocol      = "tcp"
-		}
-	  ]
-	  environment = [
-		{
-		  name  = "ACCEPT_EULA"
-		  value = "Y"
-		},
-		{
-		  name  = "MSSQL_PID"
-		  value = "Express"
-		},
-		{
-		  name = "MSSQL_ENABLE_HADR"
-		  value = "1"
-		},
-		{
-		  name = "MSSQL_AGENT_ENABLED"
-		  value = "false"
-		}
-	  ]
-	  secrets = [
-		{
-		  name      = "SA_PASSWORD"
-		  valueFrom = aws_secretsmanager_secret.db_password.arn
-		}
-	  ]
-	  mountPoints = [{
-	    containerPath = "/var/opt/mssql"
-	    sourceVolume  = "db-data"
-	  }]
-	  logConfiguration = {
-	    "logDriver" = "awslogs",
-		"options" = {
-		  "awslogs-group" = "/ecs/sudokubury-sqlserver",
-		  "awslogs-region" = "us-east-2",
-		  "awslogs-stream-prefix" = "ecs"
-		}
-	  }
-	}
-  ])
-
-  volume {
-	name = "db-data"
-	efs_volume_configuration {
-	  file_system_id = aws_efs_file_system.sudokubury.id
-	  transit_encryption = "ENABLED"
-	  authorization_config {
-	    access_point_id = aws_efs_access_point.sudokubury.id
-	 }
-	}
-  }
-}
-
-
 # Define the task for the application
 resource "aws_ecs_task_definition" "sudokubury_task" {
 	family = "sudokubury-app-task"
@@ -143,26 +70,6 @@ resource "aws_ecs_task_definition" "sudokubury_task" {
 	])
 }
 
-# Define the service discovery for the application
-resource "aws_service_discovery_private_dns_namespace" "sudokubury" {
-  name        = "sudokubury.local"
-  description = "Private DNS namespace for Sudokubury application"
-  vpc         = aws_vpc.main.id
-}
-
-# Define the service discovery service for the database. This will allow the application to discover the database service using DNS.
-resource "aws_service_discovery_service" "sudokubury" {
-  name = "sudokubury-sqlserver"
-  dns_config {
-	namespace_id = aws_service_discovery_private_dns_namespace.sudokubury.id
-	routing_policy = "MULTIVALUE"
-	dns_records {
-	  type = "A"
-	  ttl  = 10
-	}
-  }
-}
-
 # Define the ECS service for the application
 resource "aws_ecs_service" "sudokubury_app" {
   name            = "sudokubury-app-service"
@@ -181,34 +88,10 @@ resource "aws_ecs_service" "sudokubury_app" {
   }
 }
 
-# Define the ECS service for the database
-resource "aws_ecs_service" "db_service" {
-  name            = "sudokubury-db-service"
-  cluster         = aws_ecs_cluster.sudokubury.id
-  task_definition = aws_ecs_task_definition.db_task.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
-  network_configuration {
-	subnets         = aws_subnet.private[*].id
-	security_groups = [aws_security_group.db_sg.id]
-  }
-  service_registries {
-	registry_arn = aws_service_discovery_service.sudokubury.arn
-  }
-}
-
 resource "aws_cloudwatch_log_group" "sudokubury_app" {
   name              = "/ecs/sudokubury-app"
   retention_in_days = 7
   tags = {
     Name = "sudokubury-app-logs"
-  }
-}
-
-resource "aws_cloudwatch_log_group" "sudokubury_sqlserver" {
-  name              = "/ecs/sudokubury-sqlserver"
-  retention_in_days = 7
-  tags = {
-    Name = "sudokubury-sqlserver-logs"
   }
 }

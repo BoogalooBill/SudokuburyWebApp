@@ -22,10 +22,10 @@ namespace SudokuburyWebApp.Server.Models
         public int HardGamesCompleted { get; set; } = 0;
         public int ExpertGamesCompleted { get; set; } = 0;
 
-        public TimeSpan BestTimeEasy { get; set; } = TimeSpan.MaxValue;
-        public TimeSpan BestTimeMedium { get; set; } = TimeSpan.MaxValue;
-        public TimeSpan BestTimeHard { get; set; } = TimeSpan.MaxValue;
-        public TimeSpan BestTimeExpert { get; set; } = TimeSpan.MaxValue;
+        public TimeSpan BestTimeEasy { get; set; } = TimeSpan.Zero;
+        public TimeSpan BestTimeMedium { get; set; } = TimeSpan.Zero;
+        public TimeSpan BestTimeHard { get; set; } = TimeSpan.Zero;
+        public TimeSpan BestTimeExpert { get; set; } = TimeSpan.Zero;
 
         public TimeSpan TotalPlayTime { get; set; } = TimeSpan.Zero;
 

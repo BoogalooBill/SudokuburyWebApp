@@ -28,7 +28,7 @@ resource "aws_iam_role_policy" "ecs_task_execution_role_policy" {
 		Effect = "Allow"
 		Action = ["secretsmanager:GetSecretValue"]
 		Resource = [
-			aws_secretsmanager_secret.db_password.arn,
+			"arn:aws:secretsmanager:us-east-2:${data.aws_caller_identity.current.account_id}:secret:rds!*"			
 			aws_secretsmanager_secret.jwt_key.arn,
 			aws_secretsmanager_secret.connection_string.arn
 		]

@@ -10,7 +10,7 @@ namespace SudokuburyWebApp.Server.Data
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
             // Use the same connection string as in appsettings.json
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SudokuGameAppDb;Trusted_Connection=true;MultipleActiveResultSets=true");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=SudokuGameAppDb;Username=postgres;Password=MyStrongPassword123#");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

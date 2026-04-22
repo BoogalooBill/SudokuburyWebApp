@@ -47,14 +47,10 @@ if (builder.Environment.IsProduction() || builder.Environment.IsStaging())
     }
 }
 
-// Always use SQL Server
+// Always use PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+    options.UseNpgsql(connectionString ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
-
-// Always use SQL Server
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
 // Adding Identity with production-ready settings
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

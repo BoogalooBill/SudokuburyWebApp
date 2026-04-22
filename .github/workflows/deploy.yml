@@ -20,10 +20,6 @@ jobs:
       - name: Set secrets in Secrets Manager
         run: | 
           aws secretsmanager put-secret-value \
-            --secret-id sudokubury/db_password \
-            --secret-string "${{ secrets.TF_VAR_DB_PASSWORD }}"
-
-          aws secretsmanager put-secret-value \
             --secret-id sudokubury/jwt_key \
             --secret-string "${{ secrets.TF_VAR_JWT_KEY }}"
 
