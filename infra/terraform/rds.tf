@@ -16,6 +16,7 @@ resource "aws_db_instance" "sudokubury" {
 	manage_master_user_password = true
 	db_subnet_group_name = aws_db_subnet_group.sudokubury.name
 	vpc_security_group_ids = [aws_security_group.db_sg.id]
+	allocated_storage = 20
 	skip_final_snapshot = true
 	deletion_protection = false
 	tags = {
