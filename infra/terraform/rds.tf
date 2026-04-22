@@ -18,7 +18,6 @@ resource "aws_db_instance" "sudokubury" {
 	vpc_security_group_ids = [aws_security_group.db_sg.id]
 	skip_final_snapshot = true
 	deletion_protection = false
-	skip_final_snapshot = true
 	tags = {
 		Name = "sudokubury-db"
 	}
