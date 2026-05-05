@@ -8,3 +8,8 @@ output "rds_endpoint" {
   description = "The endpoint of the RDS instance"
   value       = aws_db_instance.sudokubury.endpoint
 }
+
+output "route53_nameservers" {
+  description = "The nameservers to configure in Cloudflare"
+  value       = aws_route53_zone.sudokubury.name_servers
+}
