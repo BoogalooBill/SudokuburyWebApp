@@ -48,8 +48,8 @@ resource "aws_route53_record" "sudokubury" {
   name    = "sudokubury.dev"
   type    = "A"
   alias {
-	target_dns_name = aws_lb.sudokubury.dns_name
-	target_zone_id  = aws_lb.sudokubury.zone_id
+	name = aws_lb.sudokubury.dns_name
+	zone_id  = aws_lb.sudokubury.zone_id
 	evaluate_target_health = true
   }
 }
