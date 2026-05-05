@@ -23,3 +23,16 @@ resource "aws_db_instance" "sudokubury" {
 		Name = "sudokubury-db"
 	}
 }
+
+# Retrieve the RDS master user password from Secrets Manager
+data "aws_secretsmanager_secret_version" "rds_pasword" {
+	secret_id = aws_db_instance.sudokubury.master_user_secret[0].secret_arn
+	depends_on = [aws_db_instance.sudokubury]
+}
+
+# Create a secret in Secrets Manager to store the connection string for the application
+locals {
+	rds_credentials = jsondecode(data.aws_secretsmanager_secret_version.rds_password.secret_string)
+	rds_password = local.rds_credentials["password"]
+	connection_string = "Host=${aws_db_instance.sudokubury.address};Database=SudokuGameAppDb;Username=postgres;Password=${local.rds_password};"
+}

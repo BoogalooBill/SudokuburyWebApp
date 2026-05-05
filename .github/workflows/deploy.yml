@@ -23,10 +23,6 @@ jobs:
             --secret-id sudokubury/jwt_key \
             --secret-string "${{ secrets.TF_VAR_JWT_KEY }}"
 
-          aws secretsmanager put-secret-value \
-            --secret-id sudokubury/connection_string \
-            --secret-string "${{ secrets.TF_VAR_CONNECTION_STRING }}"
-
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2

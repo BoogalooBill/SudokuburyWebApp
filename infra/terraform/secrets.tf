@@ -8,3 +8,8 @@ resource "aws_secretsmanager_secret" "connection_string" {
 	name = "sudokubury/connection_string"
 	description = "Database connection string"
 }
+
+resource "aws_secretsmanager_secret_version" "connection_string" {
+	secret_id = aws_secretsmanager_secret.connection_string.id
+	secret_string = local.connection_string
+}
