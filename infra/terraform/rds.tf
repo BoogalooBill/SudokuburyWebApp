@@ -25,7 +25,7 @@ resource "aws_db_instance" "sudokubury" {
 }
 
 # Retrieve the RDS master user password from Secrets Manager
-data "aws_secretsmanager_secret_version" "rds_pasword" {
+data "aws_secretsmanager_secret_version" "rds_password" {
 	secret_id = aws_db_instance.sudokubury.master_user_secret[0].secret_arn
 	depends_on = [aws_db_instance.sudokubury]
 }
