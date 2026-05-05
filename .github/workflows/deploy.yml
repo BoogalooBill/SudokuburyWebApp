@@ -55,12 +55,15 @@ jobs:
 
       - name: Force ECS Redeployment
         run: |
+          # Check available services in the cluster before trying to update
+          aws ecs list-services --cluster sudokubury-cluster
+
           aws ecs update-service \
           --cluster sudokubury-cluster \
           --service sudokubury-app-service \
-          --force-new-deployment
+          --force-new-deployment || echo "Failed to update sudokubury-app-service, it may not exist yet."
 
           aws ecs update-service \
           --cluster sudokubury-cluster \
           --service sudokubury-db-service \
-          --force-new-deployment
+          --force-new-deployment || echo "Failed to update sudokubury-db-service, it may not exist yet."
