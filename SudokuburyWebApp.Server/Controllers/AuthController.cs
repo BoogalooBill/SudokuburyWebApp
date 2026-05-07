@@ -14,17 +14,20 @@ namespace SudokuburyWebApp.Server.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly JwtService _jwtService;
+        private readonly DisposableEmailService _disposableEmailService;
 
-        public AuthController (UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, JwtService jwtService)
+        public AuthController (UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, JwtService jwtService, DisposableEmailService disposableEmailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
+            _disposableEmailService = disposableEmailService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] AuthRegisterRequest request)
         {
+            // Validate the incoming request
             if (!ModelState.IsValid)
             {
                 return BadRequest(new AuthResponse
@@ -34,6 +37,17 @@ namespace SudokuburyWebApp.Server.Controllers
                 });
             }
 
+            // Check if the email doman name is acceptable
+            if (_disposableEmailService.IsDisposable(request.Email))
+            {
+                return BadRequest(new AuthResponse
+                {
+                    Success = false,
+                    Message = "Email domain name is not allowed"
+                });
+            }
+
+            // Check if a user with the same email already exists
             var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
             {

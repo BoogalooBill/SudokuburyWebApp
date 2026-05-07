@@ -122,6 +122,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<SudokuService>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddSingleton<DisposableEmailService>();
 
 // Health checks
 builder.Services.AddHealthChecks()

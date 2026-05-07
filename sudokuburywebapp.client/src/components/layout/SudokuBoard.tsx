@@ -1,10 +1,12 @@
-import { type FC, useCallback, useEffect } from 'react';
+import { useRef, type FC, useCallback, useEffect } from 'react';
 import { useGame, type SudokuCell } from '../../contexts/GameContext';
 import '../../styles/SudokuBoard.css';
 
 const SudokuBoard: FC = () => {
     const { gameState, selectCell, updateCell, setCellNotes, toggleNotesMode, clearSelection, clearUserEntries } = useGame();
     const { board, selectedCell, notesMode } = gameState;
+
+    const hiddenInputRef = useRef<HTMLInputElement>(null);
 
     // Handle keyboard input
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
@@ -44,6 +46,8 @@ const SudokuBoard: FC = () => {
                     // Set cell value
                     updateCell(row, col, value);
                 }
+
+                hiddenInputRef.current?.blur(); // Remove focus from hidden input to prevent mobile keyboard from appearing
                 break;
 
             case 'Backspace':
@@ -113,6 +117,7 @@ const SudokuBoard: FC = () => {
     // Handle cell click
     const handleCellClick = useCallback((row: number, col: number) => {
         selectCell(row, col);
+        hiddenInputRef.current?.focus()
     }, [selectCell]);
 
     // Render individual cell
@@ -160,6 +165,17 @@ const SudokuBoard: FC = () => {
 
     return (
         <div className="sudoku-board-container">
+            <input
+                ref={hiddenInputRef}
+                inputMode="numeric"
+                style={{ 
+                    position: 'absolute',
+                    opacity: 0,
+                    width: 0,
+                    height: 0,
+                    pointerEvents: 'none'
+                }}
+            />
             <div className="sudoku-board">
                 {board.map((row, rowIndex) =>
                     row.map((cell, colIndex) => renderCell(cell, rowIndex, colIndex))

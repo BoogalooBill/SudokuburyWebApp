@@ -35,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <Content Include="Resources\disposable_email_blocklist.conf">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
     <Folder Include="Migrations\" />
   </ItemGroup>
 
