@@ -75,7 +75,7 @@ Above is a diagram detailing the cloud infrastructure for the application. Flow 
 
 1. A user makes requests to sudokubury.dev (or whatever domain name was chosen)
 2. The request is received on the Cloudflare DNS and routed to the Application Load Balancer (ALB) on the AWS Virtual Private Cloud (VPC).
-3.    When received on the ALB, it uses the default round-robin strategy to choose which task to serve a request, skipping over any task that fails its health check. 
+3. When received on the ALB, it uses the default round-robin strategy to choose which task to serve a request, skipping over any task that fails its health check. 
     - The ALB also supports a least-outstanding-requests algorithm to route new requests to tasks which have the least in-flight requests. Round robin was chosen for its simplicity.
 
 4. When chosen, the request is sent to the ECS task which serves the request and makes reads/writes to the database if necessary.
