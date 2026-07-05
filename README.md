@@ -119,3 +119,7 @@ The main highlight here is the Sudoku puzzle generation function, as this is the
     - Hard is 55 removals
     - Expert is 62 removals, the maximum amount of removals to ensure that the puzzle has only one unique solution.
 7. Once the target number of entries are removed, the random puzzle is completed and returned.
+
+The solved puzzle is stored on the backend to allow for faster solution checking and giving hints. 
+
+An optimization that can be made here is storing the completed puzzles in a separate table within the database, and using these puzzles as "seeds". The idea here is that when the user requests a new puzzle, the server can take a random seed puzzle and build the random puzzle board from this seed, effectively removing steps 1-5 of the above. The key advantage here is that the database can be pre-filled with hundreds or thousands of seed puzzles, removing a good chunk of computational time from initial seed generation. 
